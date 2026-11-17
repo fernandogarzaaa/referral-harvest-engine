@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Referral Harvest Admin{% endblock %}</title>
+<style>
+  :root { --bg: #f6f7f9; --card: #fff; --ink: #1a1d21; --muted: #6b7280; --line: #e5e7eb; --accent: #1d4ed8; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); margin: 0; }
+  header { background: #111827; color: #fff; padding: 12px 20px; display: flex; gap: 16px; align-items: center; }
+  header a { color: #d1d5db; text-decoration: none; font-size: 14px; }
+  header a:hover { color: #fff; }
+  header .brand { font-weight: 700; color: #fff; margin-right: 12px; }
+  main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  .card .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .card .v { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  th { background: #f3f4f6; font-weight: 600; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; background: #eef2ff; color: #3730a3; }
+  .tenantbar { margin-bottom: 16px; font-size: 14px; }
+  .tenantbar select { padding: 6px 10px; font-size: 14px; }
+  form.inline { display: inline; }
+  button { background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+  button.secondary { background: #6b7280; }
+  button:disabled { opacity: .5; cursor: default; }
+  .login { max-width: 360px; margin: 80px auto; background: var(--card); padding: 28px; border-radius: 10px; border: 1px solid var(--line); }
+  .login input { width: 100%; padding: 10px; margin: 8px 0 16px; box-sizing: border-box; }
+  .error { color: #b91c1c; margin-bottom: 12px; }
+  .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .field input { width: 100%; padding: 8px; box-sizing: border-box; }
+</style>
+</head>
+<body>
+<header>
+  <span class="brand">Referral Harvest</span>
+  {% if tenant is defined and tenant %}
+  <a href="/admin/?tenant_id={{ tenant.id }}">Overview</a>
+  <a href="/admin/asks?tenant_id={{ tenant.id }}">Asks</a>
+  <a href="/admin/referrals?tenant_id={{ tenant.id }}">Referrals</a>
+  <a href="/admin/rewards?tenant_id={{ tenant.id }}">Rewards</a>
+  {% endif %}
+  <a href="/admin/tenants">Tenants</a>
+  <span style="flex:1"></span>
+  {% if csrf_token is defined and csrf_token %}
+  <form class="inline" method="post" action="/admin/logout">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="secondary" type="submit">Log out</button>
+  </form>
+  {% endif %}
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

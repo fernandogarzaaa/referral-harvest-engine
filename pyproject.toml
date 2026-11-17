@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "referral-harvest-engine"
+version = "0.1.0"
+description = "Production referral engine for home-service shops: peak-satisfaction ask, tracked codes, reward fulfillment, unit-economics reporting."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0",
+    "alembic>=1.14",
+    "apscheduler>=3.10",
+    "jinja2>=3.1",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "bcrypt>=4.0",
+    "itsdangerous>=2.1",
+    "httpx>=0.27",
+    "python-multipart>=0.0.9",
+    "psycopg[binary]>=3.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+# B008 flags FastAPI's Depends()/Query() in parameter defaults, which is the
+# framework's documented pattern, not a bug.
+ignore = ["B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.alembic]
+script_location = "alembic"

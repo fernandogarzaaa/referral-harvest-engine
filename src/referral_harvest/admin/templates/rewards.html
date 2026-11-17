@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Rewards - Referral Harvest Admin{% endblock %}
+{% block content %}
+<h2>Rewards queue ({{ tenant.name }})</h2>
+<table>
+  <tr><th>Amount</th><th>Kind</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+  {% for rw in rewards %}
+  <tr>
+    <td>${{ "%.2f"|format(rw.amount_cents / 100) }}</td>
+    <td>{{ rw.kind.value }}</td>
+    <td><span class="pill">{{ rw.status.value }}</span></td>
+    <td>{{ rw.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+    <td>
+      {% if rw.status.value == "pending" %}
+      <form class="inline" method="post" action="/admin/rewards/{{ rw.id }}/approve">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">Approve</button>
+      </form>
+      {% endif %}
+      {% if rw.status.value in ("pending", "approved") %}
+      <form class="inline" method="post" action="/admin/rewards/{{ rw.id }}/fulfill">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">Mark fulfilled</button>
+      </form>
+      {% endif %}
+      {% if rw.status.value == "fulfilled" %}<small>via {{ rw.fulfilled_via or "?" }}</small>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% if not rewards %}<p>No rewards yet.</p>{% endif %}
+{% endblock %}

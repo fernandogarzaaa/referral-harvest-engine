@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Asks - Referral Harvest Admin{% endblock %}
+{% block content %}
+<h2>Referral asks ({{ tenant.name }})</h2>
+<table>
+  <tr><th>Code</th><th>Status</th><th>Created</th><th>Scheduled send</th><th>Expires</th></tr>
+  {% for ask in asks %}
+  <tr>
+    <td><code>{{ ask.code }}</code></td>
+    <td><span class="pill">{{ ask.status.value }}</span></td>
+    <td>{{ ask.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+    <td>{{ ask.sent_at.strftime("%Y-%m-%d %H:%M") if ask.sent_at else "-" }}</td>
+    <td>{{ ask.expires_at.strftime("%Y-%m-%d") if ask.expires_at else "-" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% if not asks %}<p>No asks yet.</p>{% endif %}
+{% endblock %}

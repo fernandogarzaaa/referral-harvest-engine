@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Referrals - Referral Harvest Admin{% endblock %}
+{% block content %}
+<h2>Referrals ({{ tenant.name }})</h2>
+<table>
+  <tr><th>Code</th><th>Referee</th><th>Status</th><th>Claimed</th><th>Booked</th><th>Completed</th></tr>
+  {% for r in referrals %}
+  <tr>
+    <td><code>{{ r.code }}</code></td>
+    <td>{{ r.referee_name }}<br><small>{{ r.referee_phone_e164 }}</small></td>
+    <td><span class="pill">{{ r.status.value }}</span></td>
+    <td>{{ r.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+    <td>{{ r.booked_at.strftime("%Y-%m-%d") if r.booked_at else "-" }}</td>
+    <td>{{ r.completed_at.strftime("%Y-%m-%d") if r.completed_at else "-" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% if not referrals %}<p>No referrals yet.</p>{% endif %}
+{% endblock %}

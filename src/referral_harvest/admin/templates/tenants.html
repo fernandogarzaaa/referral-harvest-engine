@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Tenants - Referral Harvest Admin{% endblock %}
+{% block content %}
+<h2>Tenants</h2>
+<table>
+  <tr><th>Name</th><th>Slug</th><th>Created</th><th></th></tr>
+  {% for t in tenants %}
+  <tr>
+    <td>{{ t.name }}</td>
+    <td><code>{{ t.slug }}</code></td>
+    <td>{{ t.created_at.strftime("%Y-%m-%d") }}</td>
+    <td><a href="/admin/?tenant_id={{ t.id }}">Overview</a></td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if tenant %}
+<h2 style="margin-top:32px">Settings ({{ tenant.name }})</h2>
+<form method="post" action="/admin/tenants/{{ tenant.id }}/settings">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="settings-grid">
+    {% for key in ["trade","reward_kind","sms_sender","crm_adapter","reward_fulfiller","quiet_hours_start","quiet_hours_end","ask_template","reward_webhook_url"] %}
+    <div class="field">
+      <label>{{ key }}</label>
+      <input name="setting_{{ key }}" value="{{ tenant.settings.get(key, '') }}">
+    </div>
+    {% endfor %}
+    {% for key in ["reward_amount_cents","ask_cooldown_days","ask_expiry_days","min_rating","paid_cac_cents"] %}
+    <div class="field">
+      <label>{{ key }}</label>
+      <input name="setting_{{ key }}" type="number" value="{{ tenant.settings.get(key, '') }}">
+    </div>
+    {% endfor %}
+  </div>
+  <p><button type="submit">Save settings</button></p>
+</form>
+<p><small>Omitted fields keep their current values. Invalid numbers are ignored.</small></p>
+{% endif %}
+{% endblock %}

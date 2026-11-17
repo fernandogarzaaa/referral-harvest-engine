@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Overview - Referral Harvest Admin{% endblock %}
+{% block content %}
+<div class="tenantbar">
+  <form method="get" action="/admin/">
+    <label>Tenant:
+      <select name="tenant_id" onchange="this.form.submit()">
+        {% for t in tenants %}
+        <option value="{{ t.id }}" {% if t.id == tenant.id %}selected{% endif %}>{{ t.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </form>
+</div>
+<h2>Unit economics (last 30 days)</h2>
+<div class="cards">
+  <div class="card"><div class="k">Cost / referred job</div><div class="v">${{ "%.2f"|format((econ.cost_per_referred_job_cents or 0) / 100) }}</div></div>
+  <div class="card"><div class="k">Total cost</div><div class="v">${{ "%.2f"|format(econ.total_cost_cents / 100) }}</div></div>
+  <div class="card"><div class="k">SMS cost</div><div class="v">${{ "%.2f"|format(econ.sms_cost_cents / 100) }}</div></div>
+  <div class="card"><div class="k">Rewards paid</div><div class="v">${{ "%.2f"|format(econ.rewards_fulfilled_cents / 100) }}</div></div>
+  <div class="card"><div class="k">Paid CAC benchmark</div><div class="v">${{ "%.2f"|format(econ.paid_cac_cents / 100) }}</div></div>
+  <div class="card"><div class="k">Savings vs CAC</div><div class="v">${{ "%.2f"|format((econ.savings_vs_cac_cents or 0) / 100) }}</div></div>
+</div>
+<h2>Funnel (all time)</h2>
+<div class="cards">
+  <div class="card"><div class="k">Asks</div><div class="v">{{ funnel.asks }}</div></div>
+  <div class="card"><div class="k">Referrals claimed</div><div class="v">{{ funnel.claimed }}</div></div>
+  <div class="card"><div class="k">Booked</div><div class="v">{{ funnel.booked }}</div></div>
+  <div class="card"><div class="k">Completed</div><div class="v">{{ funnel.completed }}</div></div>
+</div>
+{% endblock %}
